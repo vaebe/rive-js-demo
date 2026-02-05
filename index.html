@@ -1,26 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Rive State Machine Demo</title>
   <style>
-    body {
+    * {
       margin: 0;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #e94560, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #a0a0a0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .canvas-container {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
     canvas {
       width: 500px;
       height: 500px;
+      display: none;
+      border-radius: 12px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 24px 32px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      max-width: 500px;
+      color: #ffffff;
+    }
+
+    .interaction-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(233, 69, 96, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: #e94560;
+      font-size: 0.9rem;
+      margin-top: 16px;
+    }
+
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 60px;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: #e94560;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      color: #fff;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+
+    footer {
+      margin-top: auto;
+      padding-top: 40px;
+      color: #666;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    footer a {
+      color: #e94560;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      canvas {
+        width: 350px;
+        height: 350px;
+      }
+
+      .canvas-container {
+        padding: 15px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <canvas id="canvas" width="500" height="500"></canvas>
+  <header>
+    <h1>姿态展示</h1>
+    <p class="subtitle">基于 Rive 的交互式动画演示</p>
+  </header>
+
+  <div class="container">
+    <div class="canvas-container">
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">加载动画中...</div>
+      </div>
+      <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+
+    <div class="info-card">
+      <span>🖱️</span>
+      <span>将鼠标悬停、点击查看交互效果</span>
+    </div>
+  </div>
+
+  <footer>
+    Powered by <a href="https://rive.app" target="_blank">Rive</a> · Built with ❤️
+  </footer>
 
   <script src="https://unpkg.com/@rive-app/canvas"></script>
   <script>
@@ -36,6 +193,10 @@
 
       onLoad() {
         r.resizeDrawingSurfaceToCanvas();
+
+        // 隐藏loading，显示canvas
+        document.getElementById('loading').style.display = 'none';
+        canvas.style.display = 'block';
 
         console.log("Animations:", r.animationNames); // [ "hover iddle", "hover dark", "hover light", "0 iddle", "1 Dark", "2 Light", "3 Dark ZOOM", "4 Light ZOOM" ]
         console.log("StateMachines:", r.stateMachineNames); // ['Two mercenaries']
@@ -57,4 +218,5 @@
     });
   </script>
 </body>
+
 </html>
