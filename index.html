@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rive State Machine Demo</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+
+  <script src="https://unpkg.com/@rive-app/canvas@2.20.0"></script>
+  <script>
+    const canvas = document.getElementById("canvas");
+
+    const r = new rive.Rive({
+      src: "./posture-animation.riv",
+      canvas,
+      autoplay: true,
+      stateMachines: "Two mercenaries",
+      fit: rive.Fit.Contain,
+      alignment: rive.Alignment.Center,
+
+      onLoad() {
+        r.resizeDrawingSurfaceToCanvas();
+
+        console.log("Animations:", r.animationNames); // [ "hover iddle", "hover dark", "hover light", "0 iddle", "1 Dark", "2 Light", "3 Dark ZOOM", "4 Light ZOOM" ]
+        console.log("StateMachines:", r.stateMachineNames); // ['Two mercenaries']
+
+        const inputs = r.stateMachineInputs("Two mercenaries");
+        console.log(inputs.map(i => i.name));
+
+        // ⚠️ 名字必须和 Rive 编辑器里一模一样
+        const hover = inputs.find(i => i.name.toLowerCase().includes("hover"));
+
+        canvas.addEventListener("mouseenter", () => {
+          hover && (hover.value = true);
+        });
+
+        canvas.addEventListener("mouseleave", () => {
+          hover && (hover.value = false);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
